@@ -1,4 +1,4 @@
-# Atividades de IoT - Arduino e Dashboard Web
+# Atividades de IOT - Arduino e Dashboard Web
 
 ## Sobre o projeto
 
