@@ -319,97 +319,16 @@ void numero(int coluna) {
 
 ---
 
-## Desafio do display duplo
+<!-- ## Desafio do display duplo
 
 Como continuação da atividade anterior, foi desenvolvido o desafio de utilizar dois displays de 7 segmentos para representar números de 00 a 99.
 
 Dessa forma, o circuito consegue apresentar números com duas casas utilizando os dois displays.
 
-![Display duplo](prints/display-duplo.png)
+![Display duplo](prints/display-duplo.png) -->
 
-### Código
 
-```c
-int relePower = 12;
-int releDirecao = 13;
 
-int botaoControle = 2;
-int fimCursoAberto = 3;
-int fimCursoFechado = 4;
-
-bool portaoAberto = false;
-bool motorLigado = false;
-
-int ledVermelho = 6;
-int ledVerde = 7;
-
-unsigned long tempoAnteriorLed = 0;
-const long intervaloLed = 500;
-bool estadoLed = false;
-
-void setup() {
-
-  pinMode(relePower, OUTPUT);
-  pinMode(releDirecao, OUTPUT);
-
-  pinMode(botaoControle, INPUT);
-  pinMode(fimCursoAberto, INPUT);
-  pinMode(fimCursoFechado, INPUT);
-
-  pinMode(ledVermelho, OUTPUT);
-  pinMode(ledVerde, OUTPUT);
-}
-
-void loop() {
-
-  controlarPortao();
-  piscarLeds();
-}
-
-void controlarPortao() {
-
-  if (digitalRead(botaoControle) == HIGH && !motorLigado) {
-
-    digitalWrite(releDirecao, portaoAberto ? LOW : HIGH);
-    digitalWrite(relePower, HIGH);
-
-    motorLigado = true;
-
-    delay(300);
-  }
-
-  if (digitalRead(fimCursoAberto) == HIGH) {
-
-    digitalWrite(relePower, LOW);
-
-    motorLigado = false;
-    portaoAberto = true;
-  }
-
-  if (digitalRead(fimCursoFechado) == HIGH) {
-
-    digitalWrite(relePower, LOW);
-
-    motorLigado = false;
-    portaoAberto = false;
-  }
-}
-
-void piscarLeds() {
-
-  unsigned long agora = millis();
-
-  if (agora - tempoAnteriorLed >= intervaloLed) {
-
-    estadoLed = !estadoLed;
-
-    digitalWrite(ledVermelho, estadoLed);
-    digitalWrite(ledVerde, !estadoLed);
-
-    tempoAnteriorLed = agora;
-  }
-}
-```
 
 ---
 
