@@ -78,15 +78,19 @@ O semáforo de pedestres também foi configurado para permitir a travessia somen
 ### Código
 
 ```c
-// SEMÁFORO 1
+// SEMÁFORO 1 (Veículos)
 const int vermelho1 = 8;
 const int amarelo1 = 9;
 const int verde1 = 10;
 
-// SEMÁFORO 2
+// SEMÁFORO 2 (Veículos)
 const int vermelho2 = 11;
 const int amarelo2 = 12;
 const int verde2 = 13;
+
+// SEMÁFORO PEDESTRE
+const int vermelhoPedestre = 5;
+const int verdePedestre = 6;
 
 void setup() {
   pinMode(vermelho1, OUTPUT);
@@ -97,6 +101,9 @@ void setup() {
   pinMode(amarelo2, OUTPUT);
   pinMode(verde2, OUTPUT);
 
+  pinMode(vermelhoPedestre, OUTPUT);
+  pinMode(verdePedestre, OUTPUT);
+
   digitalWrite(vermelho1, HIGH);
   digitalWrite(amarelo1, LOW);
   digitalWrite(verde1, LOW);
@@ -105,11 +112,13 @@ void setup() {
   digitalWrite(amarelo2, LOW);
   digitalWrite(verde2, LOW);
 
+  digitalWrite(vermelhoPedestre, HIGH);
+  digitalWrite(verdePedestre, LOW);
+
   delay(3000);
 }
 
 void loop() {
-
   digitalWrite(vermelho1, LOW);
   digitalWrite(amarelo1, LOW);
   digitalWrite(verde1, HIGH);
@@ -117,6 +126,9 @@ void loop() {
   digitalWrite(vermelho2, HIGH);
   digitalWrite(amarelo2, LOW);
   digitalWrite(verde2, LOW);
+
+  digitalWrite(vermelhoPedestre, HIGH);
+  digitalWrite(verdePedestre, LOW);
 
   delay(2500);
 
@@ -128,6 +140,9 @@ void loop() {
   digitalWrite(amarelo2, LOW);
   digitalWrite(verde2, LOW);
 
+  digitalWrite(vermelhoPedestre, HIGH);
+  digitalWrite(verdePedestre, LOW);
+
   delay(500);
 
   digitalWrite(vermelho1, HIGH);
@@ -137,6 +152,9 @@ void loop() {
   digitalWrite(vermelho2, HIGH);
   digitalWrite(amarelo2, LOW);
   digitalWrite(verde2, LOW);
+
+  digitalWrite(vermelhoPedestre, LOW);
+  digitalWrite(verdePedestre, HIGH);
 
   delay(3000);
 
@@ -148,8 +166,12 @@ void loop() {
   digitalWrite(amarelo2, LOW);
   digitalWrite(verde2, HIGH);
 
+  digitalWrite(vermelhoPedestre, HIGH);
+  digitalWrite(verdePedestre, LOW);
+
   delay(2500);
 
+ 
   digitalWrite(vermelho1, HIGH);
   digitalWrite(amarelo1, LOW);
   digitalWrite(verde1, LOW);
@@ -157,6 +179,9 @@ void loop() {
   digitalWrite(vermelho2, LOW);
   digitalWrite(amarelo2, HIGH);
   digitalWrite(verde2, LOW);
+
+  digitalWrite(vermelhoPedestre, HIGH);
+  digitalWrite(verdePedestre, LOW);
 
   delay(500);
 
@@ -167,6 +192,9 @@ void loop() {
   digitalWrite(vermelho2, HIGH);
   digitalWrite(amarelo2, LOW);
   digitalWrite(verde2, LOW);
+
+  digitalWrite(vermelhoPedestre, LOW);
+  digitalWrite(verdePedestre, HIGH);
 
   delay(3000);
 }
