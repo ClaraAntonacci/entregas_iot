@@ -119,6 +119,7 @@ void setup() {
 }
 
 void loop() {
+
   digitalWrite(vermelho1, LOW);
   digitalWrite(amarelo1, LOW);
   digitalWrite(verde1, HIGH);
@@ -171,7 +172,6 @@ void loop() {
 
   delay(2500);
 
- 
   digitalWrite(vermelho1, HIGH);
   digitalWrite(amarelo1, LOW);
   digitalWrite(verde1, LOW);
@@ -206,11 +206,58 @@ void loop() {
 
 Nesta atividade foi criado um sistema de iluminação para simular as luzes de uma pista de pouso.
 
-O circuito utiliza um fotoresistor para identificar a luminosidade do ambiente e vários LEDs para representar as luzes da pista.
+O circuito utiliza um fotoresistor para identificar a luminosidade do ambiente e 10 LEDs para representar as luzes da pista.
 
-Quando a luminosidade diminui, as luzes são acionadas. Conforme a luminosidade aumenta, os LEDs começam a ser apagados.
+A quantidade de LEDs acesos varia de acordo com a luminosidade detectada pelo fotoresistor. Quando o ambiente fica mais escuro, uma maior quantidade de LEDs é acionada. Conforme a luminosidade aumenta, a quantidade de LEDs acesos diminui.
+
+Os valores de luminosidade e a quantidade de LEDs acesos também são exibidos no Monitor Serial do Arduino.
 
 ![Pista de pouso](prints/pista-pouso.png)
+
+### Código
+
+```c
+const int fotoresistor = A0;
+
+int leds[] = {
+  2, 3, 4, 5, 6,
+  7, 8, 9, 10, 11
+};
+
+const int quantidadeLeds = 10;
+
+void setup() {
+  for (int i = 0; i < quantidadeLeds; i++) {
+    pinMode(leds[i], OUTPUT);
+  }
+
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  int luminosidade = analogRead(fotoresistor);
+
+  int quantidadeAcesos = map(luminosidade, 0, 1023, 10, 0);
+
+  for (int i = 0; i < quantidadeLeds; i++) {
+
+    if (i < quantidadeAcesos) {
+      digitalWrite(leds[i], HIGH);
+    } else {
+      digitalWrite(leds[i], LOW);
+    }
+  }
+
+  Serial.print("Luminosidade: ");
+  Serial.print(luminosidade);
+
+  Serial.print(" | LEDs acesos: ");
+  Serial.println(quantidadeAcesos);
+
+  delay(100);
+}
+```
 
 ---
 
@@ -319,24 +366,11 @@ void numero(int coluna) {
 
 ---
 
-<!-- ## Desafio do display duplo
-
-Como continuação da atividade anterior, foi desenvolvido o desafio de utilizar dois displays de 7 segmentos para representar números de 00 a 99.
-
-Dessa forma, o circuito consegue apresentar números com duas casas utilizando os dois displays.
-
-![Display duplo](prints/display-duplo.png) -->
-
-
-
-
----
-
 # Situação desafiadora - Portão eletrônico
 
 Nesta atividade foi desenvolvido um protótipo de um portão eletrônico utilizando Arduino UNO.
 
-O circuito utiliza um motor CC e relês para controlar o movimento do portão. Também foram utilizados botões para realizar os comandos de abertura e fechamento.
+O circuito utiliza um motor CC e relés para controlar o movimento do portão. Também foram utilizados botões para realizar os comandos de abertura e fechamento.
 
 Além disso, foram adicionados LEDs vermelho e verde para representar a sinalização da saída da garagem.
 
@@ -488,6 +522,5 @@ O site representa uma possível aplicação de IoT, na qual um dispositivo como 
     ├── pista-pouso.png
     ├── servo.png
     ├── display-7-segmentos.png
-    ├── display-duplo.png
     └── portao.png
 ```
