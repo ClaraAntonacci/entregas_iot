@@ -33,6 +33,26 @@ Também foi realizado o funcionamento do poste utilizando Arduino, permitindo qu
 
 ![Poste com Arduino](prints/poste-com-arduino.png)
 
+### Código
+
+```c
+int sensorLuminosidade = 0;
+int led = 9;
+
+void setup(){
+    pinMode(led, OUTPUT);
+}
+
+void loop(){
+    int nivelDeLuz = analogRead(sensorLuminosidade);
+
+    nivelDeLuz = map(nivelDeLuz, 0, 900, 255, 0);
+    nivelDeLuz = constrain(nivelDeLuz, 0, 255);
+
+    analogWrite(led, nivelDeLuz);
+}
+```
+
 ---
 
 # Aula 03 - Desafios com Arduino
@@ -54,6 +74,103 @@ Os tempos definidos foram:
 O semáforo de pedestres também foi configurado para permitir a travessia somente quando os veículos estão parados.
 
 ![Semáforo de duas vias](prints/semaforo.png)
+
+### Código
+
+```c
+// SEMÁFORO 1
+const int vermelho1 = 8;
+const int amarelo1 = 9;
+const int verde1 = 10;
+
+// SEMÁFORO 2
+const int vermelho2 = 11;
+const int amarelo2 = 12;
+const int verde2 = 13;
+
+void setup() {
+  pinMode(vermelho1, OUTPUT);
+  pinMode(amarelo1, OUTPUT);
+  pinMode(verde1, OUTPUT);
+
+  pinMode(vermelho2, OUTPUT);
+  pinMode(amarelo2, OUTPUT);
+  pinMode(verde2, OUTPUT);
+
+  digitalWrite(vermelho1, HIGH);
+  digitalWrite(amarelo1, LOW);
+  digitalWrite(verde1, LOW);
+
+  digitalWrite(vermelho2, HIGH);
+  digitalWrite(amarelo2, LOW);
+  digitalWrite(verde2, LOW);
+
+  delay(3000);
+}
+
+void loop() {
+
+  digitalWrite(vermelho1, LOW);
+  digitalWrite(amarelo1, LOW);
+  digitalWrite(verde1, HIGH);
+
+  digitalWrite(vermelho2, HIGH);
+  digitalWrite(amarelo2, LOW);
+  digitalWrite(verde2, LOW);
+
+  delay(2500);
+
+  digitalWrite(vermelho1, LOW);
+  digitalWrite(amarelo1, HIGH);
+  digitalWrite(verde1, LOW);
+
+  digitalWrite(vermelho2, HIGH);
+  digitalWrite(amarelo2, LOW);
+  digitalWrite(verde2, LOW);
+
+  delay(500);
+
+  digitalWrite(vermelho1, HIGH);
+  digitalWrite(amarelo1, LOW);
+  digitalWrite(verde1, LOW);
+
+  digitalWrite(vermelho2, HIGH);
+  digitalWrite(amarelo2, LOW);
+  digitalWrite(verde2, LOW);
+
+  delay(3000);
+
+  digitalWrite(vermelho1, HIGH);
+  digitalWrite(amarelo1, LOW);
+  digitalWrite(verde1, LOW);
+
+  digitalWrite(vermelho2, LOW);
+  digitalWrite(amarelo2, LOW);
+  digitalWrite(verde2, HIGH);
+
+  delay(2500);
+
+  digitalWrite(vermelho1, HIGH);
+  digitalWrite(amarelo1, LOW);
+  digitalWrite(verde1, LOW);
+
+  digitalWrite(vermelho2, LOW);
+  digitalWrite(amarelo2, HIGH);
+  digitalWrite(verde2, LOW);
+
+  delay(500);
+
+  digitalWrite(vermelho1, HIGH);
+  digitalWrite(amarelo1, LOW);
+  digitalWrite(verde1, LOW);
+
+  digitalWrite(vermelho2, HIGH);
+  digitalWrite(amarelo2, LOW);
+  digitalWrite(verde2, LOW);
+
+  delay(3000);
+}
+```
 
 ---
 
@@ -81,6 +198,32 @@ Também foi utilizado um capacitor para auxiliar no funcionamento do circuito.
 
 ![Servo motor](prints/servo.png)
 
+### Código
+
+```c
+#include <Servo.h>
+
+Servo servo;
+
+int potenc = 0;
+int angulo = 0;
+
+void setup(){
+  servo.attach(11);
+}
+
+void loop(){
+
+  potenc = analogRead(0);
+
+  angulo = map(potenc, 0, 1023, 0, 180);
+
+  servo.write(angulo);
+
+  delay(15);
+}
+```
+
 ---
 
 ## Display de 7 segmentos
@@ -93,6 +236,59 @@ O Arduino controla individualmente os segmentos do display para formar cada núm
 
 ![Display de 7 segmentos](prints/display-7-segmentos.png)
 
+### Código
+
+```c
+int a = 4, b = 5, c = 6, d = 7, e = 8, f = 9, g = 10;
+int botao = 2;
+int num = 0;
+
+int entrada[7] = {a,b,c,d,e,f,g};
+
+int display[10][7] = {
+  {a,b,c,d,e,f},
+  {b,c},
+  {a,b,d,e,g},
+  {a,b,c,d,g},
+  {b,c,f,g},
+  {a,c,d,f,g},
+  {a,c,d,e,f,g},
+  {a,b,c},
+  {a,b,c,d,e,f,g},
+  {a,b,c,f,g}
+};
+
+void setup() {
+  for(int i=0;i<7;i++)
+    pinMode(entrada[i],OUTPUT);
+
+  pinMode(botao,INPUT);
+}
+
+void loop() {
+  int click = digitalRead(botao);
+
+  delay(100);
+
+  if(click)
+    num++;
+
+  if(num < 10)
+    numero(num);
+  else
+    num = 0;
+}
+
+void numero(int coluna) {
+  for(int i=0;i<7;i++)
+    digitalWrite(entrada[i],1);
+
+  for(int linha=0;linha<7;linha++){
+    digitalWrite(display[coluna][linha],0);
+  }
+}
+```
+
 ---
 
 ## Desafio do display duplo
@@ -102,6 +298,90 @@ Como continuação da atividade anterior, foi desenvolvido o desafio de utilizar
 Dessa forma, o circuito consegue apresentar números com duas casas utilizando os dois displays.
 
 ![Display duplo](prints/display-duplo.png)
+
+### Código
+
+```c
+int relePower = 12;
+int releDirecao = 13;
+
+int botaoControle = 2;
+int fimCursoAberto = 3;
+int fimCursoFechado = 4;
+
+bool portaoAberto = false;
+bool motorLigado = false;
+
+int ledVermelho = 6;
+int ledVerde = 7;
+
+unsigned long tempoAnteriorLed = 0;
+const long intervaloLed = 500;
+bool estadoLed = false;
+
+void setup() {
+
+  pinMode(relePower, OUTPUT);
+  pinMode(releDirecao, OUTPUT);
+
+  pinMode(botaoControle, INPUT);
+  pinMode(fimCursoAberto, INPUT);
+  pinMode(fimCursoFechado, INPUT);
+
+  pinMode(ledVermelho, OUTPUT);
+  pinMode(ledVerde, OUTPUT);
+}
+
+void loop() {
+
+  controlarPortao();
+  piscarLeds();
+}
+
+void controlarPortao() {
+
+  if (digitalRead(botaoControle) == HIGH && !motorLigado) {
+
+    digitalWrite(releDirecao, portaoAberto ? LOW : HIGH);
+    digitalWrite(relePower, HIGH);
+
+    motorLigado = true;
+
+    delay(300);
+  }
+
+  if (digitalRead(fimCursoAberto) == HIGH) {
+
+    digitalWrite(relePower, LOW);
+
+    motorLigado = false;
+    portaoAberto = true;
+  }
+
+  if (digitalRead(fimCursoFechado) == HIGH) {
+
+    digitalWrite(relePower, LOW);
+
+    motorLigado = false;
+    portaoAberto = false;
+  }
+}
+
+void piscarLeds() {
+
+  unsigned long agora = millis();
+
+  if (agora - tempoAnteriorLed >= intervaloLed) {
+
+    estadoLed = !estadoLed;
+
+    digitalWrite(ledVermelho, estadoLed);
+    digitalWrite(ledVerde, !estadoLed);
+
+    tempoAnteriorLed = agora;
+  }
+}
+```
 
 ---
 
@@ -116,6 +396,90 @@ Além disso, foram adicionados LEDs vermelho e verde para representar a sinaliza
 O objetivo da atividade foi desenvolver um sistema de automação capaz de controlar o portão por meio do Arduino.
 
 ![Portão eletrônico](prints/portao.png)
+
+### Código
+
+```c
+int relePower = 12;
+int releDirecao = 13;
+
+int botaoControle = 2;
+int fimCursoAberto = 3;
+int fimCursoFechado = 4;
+
+bool portaoAberto = false;
+bool motorLigado = false;
+
+int ledVermelho = 6;
+int ledVerde = 7;
+
+unsigned long tempoAnteriorLed = 0;
+const long intervaloLed = 500;
+bool estadoLed = false;
+
+void setup() {
+
+  pinMode(relePower, OUTPUT);
+  pinMode(releDirecao, OUTPUT);
+
+  pinMode(botaoControle, INPUT);
+  pinMode(fimCursoAberto, INPUT);
+  pinMode(fimCursoFechado, INPUT);
+
+  pinMode(ledVermelho, OUTPUT);
+  pinMode(ledVerde, OUTPUT);
+}
+
+void loop() {
+
+  controlarPortao();
+  piscarLeds();
+}
+
+void controlarPortao() {
+
+  if (digitalRead(botaoControle) == HIGH && !motorLigado) {
+
+    digitalWrite(releDirecao, portaoAberto ? LOW : HIGH);
+    digitalWrite(relePower, HIGH);
+
+    motorLigado = true;
+
+    delay(300);
+  }
+
+  if (digitalRead(fimCursoAberto) == HIGH) {
+
+    digitalWrite(relePower, LOW);
+
+    motorLigado = false;
+    portaoAberto = true;
+  }
+
+  if (digitalRead(fimCursoFechado) == HIGH) {
+
+    digitalWrite(relePower, LOW);
+
+    motorLigado = false;
+    portaoAberto = false;
+  }
+}
+
+void piscarLeds() {
+
+  unsigned long agora = millis();
+
+  if (agora - tempoAnteriorLed >= intervaloLed) {
+
+    estadoLed = !estadoLed;
+
+    digitalWrite(ledVermelho, estadoLed);
+    digitalWrite(ledVerde, !estadoLed);
+
+    tempoAnteriorLed = agora;
+  }
+}
+```
 
 ---
 
@@ -179,3 +543,4 @@ O site representa uma possível aplicação de IoT, na qual um dispositivo como 
     ├── display-7-segmentos.png
     ├── display-duplo.png
     └── portao.png
+```
