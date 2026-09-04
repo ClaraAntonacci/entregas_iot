@@ -366,6 +366,108 @@ void numero(int coluna) {
 
 ---
 
+## Desafio - Display duplo com potenciômetro
+
+Nesta atividade foi utilizado um potenciômetro para controlar dois displays de 7 segmentos.
+
+O valor lido pelo potenciômetro é convertido para uma faixa de 0 a 99. O número é dividido em dezenas e unidades para ser exibido nos dois displays.
+
+O Arduino utiliza uma técnica de multiplexação para controlar os dois displays utilizando os mesmos pinos dos segmentos.
+
+O valor atual também é enviado para o Monitor Serial.
+
+![Desafio display duplo](prints/desafio.png)
+
+### Código
+
+```c
+#define incre 10
+#define decre 11
+#define Ena1 13
+#define Ena2 12
+
+int segmentos[]={2,3,4,5,6,7,8};
+int unid=0;
+int dece=0;
+const int ap= A2;
+int position = 0;
+
+bool leds[16][7]{
+    {0,0,0,0,0,0,1},
+    {1,0,0,1,1,1,1},
+    {0,0,1,0,0,1,0},
+    {0,0,0,0,1,1,0},
+    {1,0,0,1,1,0,0},
+    {0,1,0,0,1,0,0},
+    {0,1,0,0,0,0,0},
+    {0,0,0,1,1,1,1},
+    {0,0,0,0,0,0,0},
+    {0,0,0,1,1,0,0},
+    {0,0,0,1,0,0,0},
+    {1,1,0,0,0,0,0},
+    {0,1,1,0,0,0,1},
+    {1,0,0,0,0,1,0},
+    {0,1,1,0,0,0,0},
+    {0,1,1,1,0,0,0}
+};
+
+int valor = 0;
+int estado1;
+int estado2;
+
+void setup() {
+  pinMode(incre, INPUT);
+  pinMode(decre, INPUT);
+  pinMode(Ena1,OUTPUT);
+  pinMode(Ena2,OUTPUT);
+    
+  for (int i = 0; i < 7; i++) {
+    pinMode(segmentos[i], OUTPUT);
+  }
+
+  for (int i = 0; i < 7; i++) {
+    digitalWrite(segmentos[i], HIGH);
+  }
+
+  digitalWrite(Ena1, LOW);
+  digitalWrite(Ena2, LOW);
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  
+  valor = analogRead(ap);
+  position = map(valor, 0, 1023, 0, 99);
+  
+  Serial.println(position);
+  dece = (position)/10;
+  Serial.println(dece);
+  unid = position-(dece*10);
+  Serial.println(unid);
+  
+  digitalWrite(Ena1,HIGH);
+  digitalWrite(Ena2,LOW);
+
+  for(int i=0; i<7; i++){
+    digitalWrite(segmentos[i],leds[unid][i]);
+  }
+
+  delay(9);
+
+  digitalWrite(Ena1,LOW);
+  digitalWrite(Ena2,HIGH);
+
+  for(int i=0; i<7; i++){
+    digitalWrite(segmentos[i],leds[dece][i]);
+  }
+  
+  delay(15);
+}
+```
+
+---
+
 # Situação desafiadora - Portão eletrônico
 
 Nesta atividade foi desenvolvido um protótipo de um portão eletrônico utilizando Arduino UNO.
@@ -522,5 +624,6 @@ O site representa uma possível aplicação de IoT, na qual um dispositivo como 
     ├── pista-pouso.png
     ├── servo.png
     ├── display-7-segmentos.png
+    ├── desafio.png
     └── portao.png
 ```
